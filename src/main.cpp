@@ -4,6 +4,48 @@
 
 using namespace geode::prelude;
 
+enum class ArrayType {
+	LevelBrowser,
+	LevelList,
+	Gauntlet
+};
+
+void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjso) {
+	if (!Mod::get()->getSettingValue<bool>("enabled")) return;
+	if (!array || (type == ArrayType::LevelBrowser && !gjso)) return;
+
+	CCObject* firstObject = array->objectAtIndex(0);
+	if (type == ArrayType::LevelList && !typeinfo_cast<LevelCell*>(firstObject)) return;
+	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return;
+
+	int attempts = 0, jumps = 0, clicks = 0, levels = 0;
+	GameLevelManager* glm = GameLevelManager::get()
+	for (CCObject* obj : CCArrayExt<CCObject*>(array)) {
+		GJGameLevel* theLevel;
+		if (type == ArrayType::LevelList) {
+			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(obj)->m_level->m_levelID.value());
+		} else if (type == ArrayType::LevelBrowser) {
+			const bool isType98 = static_cast<int>(gjso->->m_searchType) == 98;
+			if (isType98) theLevel = static_cast<GJGameLevel*>(obj);
+			else theLevel = glm->getSavedLevel(static_cast<GJGameLevel*>(obj)->m_levelID.value());
+			if (!theLevel && !isType98) continue;
+			if (theLevel && !isType98 && static_cast<std::string>(theLevel->m_levelString).empty()) continue;
+		} else if (type == ArrayType::Gauntlet) {
+			theLevel = glm->getSavedGauntletLevel(static_cast<GJGameLevel*>(obj)->m_levelID.value());
+		}
+
+		if (!theLevel || static_cast<std::string>(theLevel->m_levelString).empty()) continue;
+
+		attempts += theLevel->m_attempts.value();
+		jumps += theLevel->m_jumps.value();
+		clicks += theLevel->m_clicks.value();
+		levels += 1;
+
+		const std::string& warning = levels != array->count() ? fmt::format("\n<co>Try downloading {} more levels and checking back again!</c>", (array->count() - levels)) : "";
+		FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, m_levels->count(), warning), "OK")->show();
+	}
+}
+
 class $modify(MyLevelBrowserLayer, LevelBrowserLayer) {
 	bool init(GJSearchObject* obj) {
 		if (!LevelBrowserLayer::init(obj)) return false;
@@ -43,6 +85,7 @@ class $modify(MyLevelBrowserLayer, LevelBrowserLayer) {
 	}
 	void onAttemptSum(CCObject* sender) {
 		if (!m_levels) return;
+		/*
 		if (!typeinfo_cast<GJGameLevel*>(m_levels->objectAtIndex(0))) return;
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
 		int attempts = 0;
@@ -68,6 +111,8 @@ class $modify(MyLevelBrowserLayer, LevelBrowserLayer) {
 		}
 		const std::string& warning = levels != m_levels->count() ? fmt::format("\n<co>Try downloading {} more levels and checking back again!</c>", (m_levels->count() - levels)) : "";
 		FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, m_levels->count(), warning), "OK")->show();
+		*/
+		findSumAndDisplay(m_levels, ArrayType::LevelBrowser, m_searchObject);
 	}
 };
 
@@ -89,6 +134,7 @@ class $modify(MyLevelListLayer, LevelListLayer) {
 	}
 	void onAttemptSum(CCObject* sender) {
 		if (!m_list || !m_list->m_listView || !m_list->m_listView->m_tableView || !m_list->m_listView->m_tableView->m_cellArray) return;
+		/*
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
 		int attempts = 0;
 		int jumps = 0;
@@ -106,6 +152,8 @@ class $modify(MyLevelListLayer, LevelListLayer) {
 		}
 		const std::string& warning = levels != m_list->m_listView->m_tableView->m_cellArray->count() ? fmt::format("\n<co>Try downloading {} more levels and checking back again!</c>", (m_list->m_listView->m_tableView->m_cellArray->count() - levels)) : "";
 		FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, m_list->m_listView->m_tableView->m_cellArray->count(), warning), "OK")->show();
+		*/
+		findSumAndDisplay(m_list->m_listView->m_tableView->m_cellArray, ArrayType::LevelList, nullptr);
 	}
 };
 
@@ -133,6 +181,7 @@ class $modify(MyGauntletLayer, GauntletLayer) {
 	}
 	void onAttemptSum(CCObject* sender) {
 		if (!m_levels) return;
+		/*
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
 		int attempts = 0;
 		int jumps = 0;
@@ -150,5 +199,7 @@ class $modify(MyGauntletLayer, GauntletLayer) {
 		}
 		const std::string& warning = levels != m_levels->count() ? fmt::format("\n<co>Try downloading {} more levels and checking back again!</c>", (m_levels->count() - levels)) : "";
 		FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, m_levels->count(), warning), "OK")->show();
+		*/
+		findSumAndDisplay(m_levels, ArrayType::Gauntlet, nullptr);
 	}
 };
