@@ -19,7 +19,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return;
 
 	int attempts = 0, jumps = 0, clicks = 0, levels = 0;
-	GameLevelManager* glm = GameLevelManager::get()
+	GameLevelManager* glm = GameLevelManager::get();
 	for (CCObject* obj : CCArrayExt<CCObject*>(array)) {
 		GJGameLevel* theLevel;
 		if (type == ArrayType::LevelList) {
