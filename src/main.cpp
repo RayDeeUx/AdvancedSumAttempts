@@ -81,6 +81,7 @@ class $modify(MyLevelBrowserLayer, LevelBrowserLayer) {
 		if (!typeinfo_cast<GJGameLevel*>(m_levels->objectAtIndex(0))) return fooBar->setVisible(false);
 		if (!m_list || !m_list->m_listView || !m_list->m_listView->m_tableView || !m_list->m_listView->m_tableView->m_cellArray) return fooBar->setVisible(false);
 		if (m_list->m_listView->m_tableView->m_cellArray->count() < 1) return fooBar->setVisible(false);
+		fooBar->setVisible(true);
 
 		fooBar->setZOrder(fooBar->getZOrder() + 1);
 		fooBar->setZOrder(fooBar->getZOrder() - 1);
