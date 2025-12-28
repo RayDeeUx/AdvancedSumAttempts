@@ -25,7 +25,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		if (type == ArrayType::LevelList) {
 			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(obj)->m_level->m_levelID.value());
 		} else if (type == ArrayType::LevelBrowser) {
-			const bool isType98 = static_cast<int>(gjso->->m_searchType) == 98;
+			const bool isType98 = static_cast<int>(gjso->m_searchType) == 98;
 			if (isType98) theLevel = static_cast<GJGameLevel*>(obj);
 			else theLevel = glm->getSavedLevel(static_cast<GJGameLevel*>(obj)->m_levelID.value());
 			if (!theLevel && !isType98) continue;
@@ -42,7 +42,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		levels += 1;
 
 		const std::string& warning = levels != array->count() ? fmt::format("\n<co>Try downloading {} more levels and checking back again!</c>", (array->count() - levels)) : "";
-		FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, m_levels->count(), warning), "OK")->show();
+		FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, array->count(), warning), "OK")->show();
 	}
 }
 
