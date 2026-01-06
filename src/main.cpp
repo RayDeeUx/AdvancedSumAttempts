@@ -13,37 +13,101 @@ enum class ArrayType {
 void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjso) {
 	if (!Mod::get()->getSettingValue<bool>("enabled")) return log::info("line 14");
 	if (!array || (type == ArrayType::LevelBrowser && !gjso)) return log::info("line 15");
+	if (CCScene::get() && CCScene::get()->getChildByID("ungeil.higher_or_lower/HLLayer")) {
+		// prevent cheating, i guess
+		FLAlertLayer* aler = FLAlertLayer::create("SIKE!", "You're not getting any hints from here, bucko.", "I Understand");
+		aler->m_noElasticity = true;
+		aler->show();
+		return;
+	}
 
 	CCObject* firstObject = array->objectAtIndex(0);
 	if (type == ArrayType::LevelList && !typeinfo_cast<LevelCell*>(firstObject)) return log::info("line 18");
 	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return log::info("line 19");
 
-	int attempts = 0, jumps = 0, clicks = 0, levels = 0;
+	int attempts = 0, jumps = 0, objects = 0, clicks = 0, stars = 0, moons = 0, awardedStars = 0, awardedMoons = 0, completed = 0, levels = 0;
 	GameLevelManager* glm = GameLevelManager::get();
 	for (CCObject* obj : CCArrayExt<CCObject*>(array)) {
-		GJGameLevel* theLevel;
+		if (!obj) continue;
+
+		GJGameLevel* theLevel = nullptr;
+		int rating = 0;
 		if (type == ArrayType::LevelList && static_cast<LevelCell*>(obj)->m_level) {
 			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(obj)->m_level->m_levelID.value());
+			rating = static_cast<LevelCell*>(obj)->m_level->m_stars.value();
 		} else if (type == ArrayType::LevelBrowser) {
 			const bool isType98 = static_cast<int>(gjso->m_searchType) == 98;
 			if (isType98) theLevel = static_cast<GJGameLevel*>(obj);
 			else theLevel = glm->getSavedLevel(static_cast<GJGameLevel*>(obj)->m_levelID.value());
 			if (!theLevel && !isType98) continue;
 			if (theLevel && !isType98 && static_cast<std::string>(theLevel->m_levelString).empty()) continue;
+			if (!isType98) rating = static_cast<GJGameLevel*>(obj)->m_stars.value();
+			else rating = 0;
 		} else if (type == ArrayType::Gauntlet) {
 			theLevel = glm->getSavedGauntletLevel(static_cast<GJGameLevel*>(obj)->m_levelID.value());
+			rating = static_cast<GJGameLevel*>(obj)->m_stars.value();
 		}
 
 		if (!theLevel || static_cast<std::string>(theLevel->m_levelString).empty()) continue;
 
 		attempts += theLevel->m_attempts.value();
 		jumps += theLevel->m_jumps.value();
+		objects += theLevel->m_objectCount.value();
 		clicks += theLevel->m_clicks.value();
+
+		const bool isPlatformer = theLevel->isPlatformer();
+		if (isPlatformer) moons += rating;
+		else stars += rating;
+
+		if (theLevel->m_normalPercent.value() > 99) {
+			completed += 1;
+			if (isPlatformer) awardedMoons += rating;
+			else awardedStars += rating;
+		}
+
 		levels += 1;
 	}
 
-	const std::string& warning = levels != array->count() ? fmt::format("\n<co>Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
-	FLAlertLayer::create("AdvancedSumAttempts", fmt::format("You have {} attempts, {} jumps, and {} clicks total across {} available levels ({} total).{}", attempts, jumps, clicks, levels, array->count(), warning), "OK")->show();
+	if (levels == 0) {
+		FLAlertLayer* nothing = FLAlertLayer::create("AdvancedSumAttempts", fmt::format("<cy>No info available!</c>\n\n<co>Try downloading {} more level{}, then check back again!</c>", array->count(), array->count() != 1 ? "s" : ""), "OK");
+		nothing->m_noElasticity = true;
+		nothing->show();
+		return;
+	}
+
+	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
+
+	if (gjso && static_cast<int>(gjso->m_searchType) == 98) {
+		FLAlertLayer* alertEditor = FLAlertLayer::create(
+			"AdvancedSumAttempts",
+			fmt::format(
+				"You have {} attempts, {} jumps, and {} clicks across {} levels.\n\n"
+				"These levels use a total of at least {} objects.",
+				attempts, jumps, clicks,
+				levels, objects
+			), "OK");
+		alertEditor->m_noElasticity = true;
+		alertEditor->show();
+		return;
+	}
+
+	FLAlertLayer* alert = FLAlertLayer::create(
+		"AdvancedSumAttempts",
+		fmt::format(
+			"You have {} attempts, {} jumps, "
+			"{} clicks, {} stars, and {} moons "
+			"across {} available levels ({} total).\n\n"
+			"These levels use a total of at least {} objects "
+			"and are worth {} stars and {} moons total.{}",
+			attempts, jumps,
+			clicks, awardedStars, awardedMoons,
+			levels, array->count(),
+			objects,
+			stars, moons,
+			warning
+		), "OK");
+	alert->m_noElasticity = true;
+	alert->show();
 }
 
 class $modify(MyLevelBrowserLayer, LevelBrowserLayer) {
