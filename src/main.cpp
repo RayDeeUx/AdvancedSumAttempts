@@ -22,10 +22,10 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	}
 
 	CCObject* firstObject = array->objectAtIndex(0);
-	if (type == ArrayType::LevelList && !typeinfo_cast<LevelCell*>(firstObject)) return log::info("line 18");
-	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return log::info("line 19");
+	if (type == ArrayType::LevelList && !typeinfo_cast<LevelCell*>(firstObject)) return log::info("line 25");
+	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return log::info("line 26");
 
-	int attempts = 0, jumps = 0, objects = 0, clicks = 0, stars = 0, moons = 0, awardedStars = 0, awardedMoons = 0, completed = 0, levels = 0;
+	int attempts = 0, jumps = 0, objects = 0, clicks = 0, stars = 0, moons = 0, awardedStars = 0, awardedMoons = 0, minTimestamps = 0, timestamps = 0, maxTimestamps = 0, completed = 0, levels = 0;
 	GameLevelManager* glm = GameLevelManager::get();
 	for (CCObject* obj : CCArrayExt<CCObject*>(array)) {
 		if (!obj) continue;
@@ -65,6 +65,27 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			else awardedStars += rating;
 		}
 
+		timestamps += theLevel->m_timestamp;
+		if (theLevel->m_timestamp > 0) {
+			minTimestamps += theLevel->m_timestamp;
+			maxTimestamps += theLevel->m_timestamp;
+		} else if (theLevel->m_levelLength > -1 && theLevel->m_levelLength < 5) {
+			if (theLevel->m_levelLength == 0) {
+				maxTimestamps += (8 * 240);
+			} else if (theLevel->m_levelLength == 1) {
+				minTimestamps += ( 9 * 240);
+				maxTimestamps += (29 * 240);
+			} else if (theLevel->m_levelLength == 2) {
+				minTimestamps += (30 * 240);
+				maxTimestamps += (59 * 240);
+			} else if (theLevel->m_levelLength == 3) {
+				minTimestamps += ( 60 * 240);
+				maxTimestamps += (119 * 240);
+			} else {
+				minTimestamps += (120 * 240);
+			}
+		}
+
 		levels += 1;
 	}
 
@@ -74,8 +95,6 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		nothing->show();
 		return;
 	}
-
-	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
 
 	if (gjso && static_cast<int>(gjso->m_searchType) == 98) {
 		FLAlertLayer* alertEditor = FLAlertLayer::create(
@@ -94,6 +113,9 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		return;
 	}
 
+	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
+	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least {} second{} to beat the {} level{} available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between {} second{} and {} second{} (calculated {} second{}) to beat the {} level{} available.", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "");
+
 	FLAlertLayer* alert = FLAlertLayer::create(
 		nullptr,
 		"AdvancedSumAttempts",
@@ -101,14 +123,16 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			"You have {} attempts, {} jumps, "
 			"{} clicks, {} collected stars, "
 			"and {} collected moons "
-			"across {} available levels ({} total).\n\n"
+			"across {} available levels ({} completed, {} total).\n\n"
 			"These levels use a total of at least {} objects "
-			"and are worth {} stars and {} moons total.{}",
+			"and are worth {} stars and {} moons total.\n\n"
+			"{}{}",
 			attempts, jumps,
 			clicks, awardedStars, awardedMoons,
-			levels, array->count(),
+			levels, completed, array->count(),
 			objects,
 			stars, moons,
+			timestampsString,
 			warning
 		),
 		"Close", nullptr, 420.f,
