@@ -101,10 +101,10 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			nullptr,
 			"AdvancedSumAttempts",
 			fmt::format(
-				"You have {} attempts, {} jumps, and {} clicks across {} levels.\n\n"
-				"These levels use a total of at least {} objects.",
-				attempts, jumps, clicks,
-				levels, objects
+				"You have {} attempt{}, {} jump{}, and {} click{} across {} level{}.\n\n"
+				"These levels use a total of at least {} object{}.",
+				attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "", clicks, clicks != 1 ? "s" : "",
+				levels, levels != 1 ? "s" : "", objects, objects != 1 ? "s" : ""
 			),
 			"Close", nullptr, 420.f,
 			false, 320.f, 1.f);
@@ -120,24 +120,24 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		nullptr,
 		"AdvancedSumAttempts",
 		fmt::format(
-			"You have {} attempts, {} jumps, "
-			"{} clicks, {} collected stars, "
-			"and {} collected moons "
-			"across {} available levels ({} completed, {} total).\n\n"
-			"These levels use a total of at least {} objects "
-			"and are worth {} stars and {} moons total.\n\n"
+			"You have {} attempt{}, {} jump{}, "
+			"{} click{}, {} collected star{}, "
+			"and {} collected moon{} "
+			"across {} available level{} (of which {} completed out of {} total).\n\n"
+			"These levels use a total of at least {} object{} "
+			"and are worth {} star{} and {} moon{} in total.\n\n"
 			"{}{}",
-			attempts, jumps,
-			clicks, awardedStars, awardedMoons,
-			levels, completed, array->count(),
-			objects,
-			stars, moons,
-			timestampsString,
-			warning
+			attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "",
+			clicks, clicks != 1 ? "s" : "", awardedStars, awardedStars != 1 ? "s" : "", awardedMoons, awardedMoons != 1 ? "s" : "",
+			levels, levels != 1 ? "s" : "", completed, array->count(),
+			objects, objects != 1 ? "s" : "",
+			stars, stars != 1 ? "s" : "", moons, moons != 1 ? "s" : "",
+			timestampsString, warning
 		),
 		"Close", nullptr, 420.f,
 		false, 320.f, 1.f);
 	alert->m_noElasticity = true;
+	if (alert->m_mainLayer->getContentHeight() > 420.f) alert->setScale(420.f / alert->m_mainLayer->getContentHeight());
 	alert->show();
 }
 
