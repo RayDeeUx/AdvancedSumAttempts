@@ -99,7 +99,8 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		"AdvancedSumAttempts",
 		fmt::format(
 			"You have {} attempts, {} jumps, "
-			"{} clicks, {} stars, and {} moons "
+			"{} clicks, {} collected stars, "
+			"and {} collected moons "
 			"across {} available levels ({} total).\n\n"
 			"These levels use a total of at least {} objects "
 			"and are worth {} stars and {} moons total.{}",
