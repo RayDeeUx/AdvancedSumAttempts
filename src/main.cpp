@@ -87,7 +87,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 				attempts, jumps, clicks,
 				levels, objects
 			),
-			"Close", nullptr,
+			"Close", nullptr, 420.f
 			false, 320.f, 1.f);
 		alertEditor->m_noElasticity = true;
 		alertEditor->show();
