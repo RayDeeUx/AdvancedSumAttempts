@@ -79,13 +79,16 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 
 	if (gjso && static_cast<int>(gjso->m_searchType) == 98) {
 		FLAlertLayer* alertEditor = FLAlertLayer::create(
+			nullptr,
 			"AdvancedSumAttempts",
 			fmt::format(
 				"You have {} attempts, {} jumps, and {} clicks across {} levels.\n\n"
 				"These levels use a total of at least {} objects.",
 				attempts, jumps, clicks,
 				levels, objects
-			), "OK");
+			),
+			"Close", nullptr,
+			false, 320.f, 1.f);
 		alertEditor->m_noElasticity = true;
 		alertEditor->show();
 		return;
