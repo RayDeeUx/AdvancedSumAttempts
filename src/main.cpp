@@ -95,6 +95,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	}
 
 	FLAlertLayer* alert = FLAlertLayer::create(
+		nullptr,
 		"AdvancedSumAttempts",
 		fmt::format(
 			"You have {} attempts, {} jumps, "
@@ -108,7 +109,9 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			objects,
 			stars, moons,
 			warning
-		), "OK");
+		),
+		"Close", nullptr, 420.f,
+		false, 320.f, 1.f);
 	alert->m_noElasticity = true;
 	alert->show();
 }
