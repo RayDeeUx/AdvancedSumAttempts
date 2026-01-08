@@ -135,9 +135,8 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			timestampsString, warning
 		),
 		"Close", nullptr, 420.f,
-		false, 300.f, 1.f);
+		false, 300.f, (6.f / 7.f));
 	alert->m_noElasticity = true;
-	if (alert->m_mainLayer->getContentHeight() > 300.f) alert->setScale(300.f / alert->m_mainLayer->getContentHeight());
 	alert->show();
 }
 
