@@ -305,7 +305,7 @@ class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");
 		if (!danksGJListLayerLevls) return;
 
-		fields->m_danksGJListLayerLevls = danksGJListLayerLevls;
+		fields->m_danksGJListLayerLevls = static_cast<GJListLayer*>(danksGJListLayerLevls);
 
 		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
 		if (!infoBtn) return;
