@@ -101,8 +101,8 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			nullptr,
 			"AdvancedSumAttempts",
 			fmt::format(
-				"You have {} attempt{}, {} jump{}, and {} click{} across {} level{}.\n\n"
-				"These levels use a total of at least {} object{}.",
+				"You have <cc>{} attempt{}</c>, <cl>{} jump{}</c>, and <cd>{} click{}</c> across <cb>{} level{}</c>.\n\n"
+				"These levels use a total of at least <ca>{} object{}</c>.",
 				attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "", clicks, clicks != 1 ? "s" : "",
 				levels, levels != 1 ? "s" : "", objects, objects != 1 ? "s" : ""
 			),
@@ -114,18 +114,18 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	}
 
 	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
-	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least {} second{} to beat the {} level{} available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between {} second{} and {} second{} (calculated {} second{}) to beat the {} level{} available.", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "");
+	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least <cy>{} second{}</c> to beat the <cb>{} level{}</c> available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between <cg>{} second{}</c> and <cr>{} second{}</c> (calculated <cy>{} second{}</c>) to beat the <cb>{} level{}</c> available.", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "");
 
 	FLAlertLayer* alert = FLAlertLayer::create(
 		nullptr,
 		"AdvancedSumAttempts",
 		fmt::format(
-			"You have {} attempt{}, {} jump{}, "
-			"{} click{}, {} collected star{}, "
-			"and {} collected moon{} "
-			"across {} available level{} (of which {} completed out of {} total).\n\n"
-			"These levels use a total of at least {} object{} "
-			"and are worth {} star{} and {} moon{} in total.\n\n"
+			"You have <cc>{} attempt{}</c>, <cl>{} jump{}</c>, "
+			"<cd>{} click{}</c>, <cs>{} collected star{}</c>, "
+			"and <cj>{} collected moon{}</c> "
+			"across <cb>{} available level{}</c> (of which <cg>{} completed</c>, out of <cf>{} total</c>).\n\n"
+			"These levels use a total of at least <ca>{} object{}</c> "
+			"and are worth <cs>{} star{}</c> and <cj>{} moon{}</c> in total.\n\n"
 			"{}{}",
 			attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "",
 			clicks, clicks != 1 ? "s" : "", awardedStars, awardedStars != 1 ? "s" : "", awardedMoons, awardedMoons != 1 ? "s" : "",
