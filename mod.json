@@ -21,7 +21,8 @@
 		}
 	},
 	"dependencies": {
-		"geode.node-ids": ">=1.21.1"
+		"geode.node-ids": ">=1.21.1",
+		"alphalaneous.alphas_geode_utils": ">=1.1.8"
 	},
 	"issues": {
 		"url": "https://discord.com/channels/911701438269386882/1205523212444639292",
