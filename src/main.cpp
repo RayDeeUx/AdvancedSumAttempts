@@ -25,7 +25,8 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	if (type == ArrayType::LevelList && !typeinfo_cast<LevelCell*>(firstObject)) return log::info("line 25");
 	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return log::info("line 26");
 
-	int attempts = 0, jumps = 0, objects = 0, clicks = 0, stars = 0, moons = 0, awardedStars = 0, awardedMoons = 0, minTimestamps = 0, timestamps = 0, maxTimestamps = 0, completed = 0, levels = 0;
+	int attempts = 0, jumps = 0, objects = 0, clicks = 0, stars = 0, moons = 0, orbs = 0, awardedStars = 0, awardedMoons = 0, minTimestamps = 0, timestamps = 0, maxTimestamps = 0, completed = 0, levels = 0;
+	bool foundXL = false;
 	GameLevelManager* glm = GameLevelManager::get();
 	for (CCObject* obj : CCArrayExt<CCObject*>(array)) {
 		if (!obj) continue;
@@ -83,7 +84,22 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 				maxTimestamps += (119 * 240);
 			} else {
 				minTimestamps += (120 * 240);
+				if (!foundXL) foundXL = true;
 			}
+		}
+
+		// auto levels don't count, silly!
+		if (rating > 1 && rating < 11) {
+			// it's entirely possible these numbers are wrong, fandom wikis can sometimes be the worst
+			if (rating == 2) orbs += 50;
+			else if (rating == 3) orbs += 75;
+			else if (rating == 4) orbs += 125;
+			else if (rating == 5) orbs += 175;
+			else if (rating == 6) orbs += 225;
+			else if (rating == 7) orbs += 275;
+			else if (rating == 8) orbs += 350;
+			else if (rating == 9) orbs += 425;
+			else orbs += 500;
 		}
 
 		levels += 1;
@@ -102,7 +118,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			"AdvancedSumAttempts",
 			fmt::format(
 				"You have <cc>{} attempt{}</c>, <cl>{} jump{}</c>, and <cd>{} click{}</c> across <cb>{} level{}</c>.\n\n"
-				"These levels use a total of at least <ca>{} object{}</c>.",
+				"Together, these levels use at least <ca>{} object{}</c>.",
 				attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "", clicks, clicks != 1 ? "s" : "",
 				levels, levels != 1 ? "s" : "", objects, objects != 1 ? "s" : ""
 			),
@@ -114,24 +130,24 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	}
 
 	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
-	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least <cy>{} second{}</c> to beat the <cb>{} level{}</c> available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between <cg>{} second{}</c> and <cr>{} second{}</c> (calculated <cy>{} second{}</c>) to beat the <cb>{} level{}</c> available.{}", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "", timestamps > 0 ? "" : "\n\n(This estimate is <c_>VERY</c> rough, as none of these levels have a known level duration Try viewing them individually using the BetterInfo mod.)");
+	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least <cy>{} second{}</c> to beat the <cb>{} level{}</c> available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between <cg>{} second{}</c> and <cr>{} second{}</c>{} (calculated <cy>{} second{}</c>) to beat the <cb>{} level{}</c> available.{}", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", foundXL ? "<c_>*</c>" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "", timestamps > 0 && levels == array->count() ? "" : "\n\n(This estimate is <c_>VERY</c> rough, as none of these levels have a known level duration. Try viewing the levels individually using the BetterInfo mod, if you have it.)");
 
 	FLAlertLayer* alert = FLAlertLayer::create(
 		nullptr,
 		"AdvancedSumAttempts",
 		fmt::format(
-			"You have <cc>{} attempt{}</c>, <cl>{} jump{}</c>, "
+			"You have <cc>{} attempt{}</c>, <cg>{} jump{}</c>, "
 			"<cd>{} click{}</c>, <cs>{} collected star{}</c>, "
 			"and <cj>{} collected moon{}</c> "
 			"across <cb>{} available level{}</c> (of which <cg>{} are completed</c>, out of <cf>{} total</c>).\n\n"
-			"These levels use a total of at least <ca>{} object{}</c> "
-			"and are worth <cs>{} star{}</c> and <cj>{} moon{}</c> in total.\n\n"
+			"Together, these levels use at least <ca>{} object{}</c> "
+			"and can give you <cs>{} star{}</c> and <cj>{} moon{}</c> (<cl>{} orb{}</c>) in total.\n\n"
 			"{}{}",
 			attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "",
 			clicks, clicks != 1 ? "s" : "", awardedStars, awardedStars != 1 ? "s" : "", awardedMoons, awardedMoons != 1 ? "s" : "",
 			levels, levels != 1 ? "s" : "", completed, array->count(),
 			objects, objects != 1 ? "s" : "",
-			stars, stars != 1 ? "s" : "", moons, moons != 1 ? "s" : "",
+			stars, stars != 1 ? "s" : "", moons, moons != 1 ? "s" : "", orbs, orbs != 1 ? "s" : "",
 			timestampsString, warning
 		),
 		"Close", nullptr, 420.f,
