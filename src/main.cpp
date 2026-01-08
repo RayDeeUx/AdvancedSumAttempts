@@ -275,7 +275,7 @@ class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 		fields->m_myOwnButton->setVisible(false);
 
 		if (!fields->m_danksGJListLayerLevls->m_listView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray) return;
-		if (fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray->count() < 1) return;
+		// if (fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray->count() < 1) return;
 
 		fields->m_myOwnButton->setVisible((fields->m_nextPageBtn->isVisible() || fields->m_prevPageBtn->isVisible()));
 	}
@@ -310,7 +310,7 @@ class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
 		if (!infoBtn) return;
 
-		infoBtn->setScale(.6f);
+		infoBtn->setScale(.5f);
 
 		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(MyGlobedLevelListLayer::onAttemptSum));
 		if (!btn) return;
