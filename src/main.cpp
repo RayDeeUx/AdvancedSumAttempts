@@ -284,7 +284,7 @@ class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 		if (!fields || !fields->m_danksGJListLayerLevls) return;
 		if (!fields->m_danksGJListLayerLevls->m_listView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray) return;
 
-		findSumAndDisplay(m_list->m_listView->m_tableView->m_cellArray, ArrayType::Globed, nullptr);
+		findSumAndDisplay(fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray, ArrayType::Globed, nullptr);
 	}
 	void modify() {
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
