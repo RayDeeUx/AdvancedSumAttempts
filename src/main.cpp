@@ -315,42 +315,37 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 };
 */
 
+// GlobedFeaturedListLayer
+
+#define MODIFY_GLOBED_LIST_LAYER\
+	struct Fields {\
+		GJListLayer* m_danksGJListLayerLevls {};\
+	};\
+	void onAttemptSum(CCObject* sender) {\
+		auto fields = m_fields.self();\
+		if (!fields || !fields->m_danksGJListLayerLevls) return;\
+		if (!fields->m_danksGJListLayerLevls->m_listView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray) return;\
+		findSumAndDisplay(fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray, ArrayType::Globed, nullptr);\
+	}\
+	void modify() {\
+		if (!Mod::get()->getSettingValue<bool>("enabled")) return;\
+		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);\
+		if (!globedPageMenu) return;\
+		auto fields = m_fields.self();\
+		if (!fields) return;\
+		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");\
+		if (!danksGJListLayerLevls) return;\
+		fields->m_danksGJListLayerLevls = static_cast<GJListLayer*>(danksGJListLayerLevls);\
+		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");\
+		if (!infoBtn) return;\
+		infoBtn->setScale(.5f);\
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(MyGlobedLevelListLayer::onAttemptSum));\
+		if (!btn) return;\
+		globedPageMenu->addChild(btn);\
+		btn->setPosition({75.f, 287.f});\
+		btn->setID("attempts-sum-button"_spr);\
+	}
+
 class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
-	struct Fields {
-		GJListLayer* m_danksGJListLayerLevls {};
-	};
-	void onAttemptSum(CCObject* sender) {
-		auto fields = m_fields.self();
-		if (!fields || !fields->m_danksGJListLayerLevls) return;
-		if (!fields->m_danksGJListLayerLevls->m_listView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray) return;
-
-		findSumAndDisplay(fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray, ArrayType::Globed, nullptr);
-	}
-	void modify() {
-		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
-
-		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);
-		if (!globedPageMenu) return;
-
-		auto fields = m_fields.self();
-		if (!fields) return;
-
-		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");
-		if (!danksGJListLayerLevls) return;
-
-		fields->m_danksGJListLayerLevls = static_cast<GJListLayer*>(danksGJListLayerLevls);
-
-		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
-		if (!infoBtn) return;
-
-		infoBtn->setScale(.5f);
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(MyGlobedLevelListLayer::onAttemptSum));
-		if (!btn) return;
-
-		globedPageMenu->addChild(btn);
-
-		btn->setPosition({75.f, 287.f});
-		btn->setID("attempts-sum-button"_spr);
-	}
+	MODIFY_GLOBED_LIST_LAYER
 };
