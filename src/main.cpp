@@ -60,7 +60,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		} else if (type == ArrayType::GlobedThree) {
 			CCNode* levelCell = static_cast<cue::ListCell*>(obj)->getChildByID("LevelCell");
 			if (!levelCell || !static_cast<LevelCell*>(levelCell)->m_level) continue;
-			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(levelCell)->m_levelID.value());
+			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(levelCell)->m_level->m_levelID.value());
 			rating = static_cast<LevelCell*>(levelCell)->m_level->m_stars.value();
 		}
 
