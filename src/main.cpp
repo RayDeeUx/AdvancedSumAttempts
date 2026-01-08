@@ -130,7 +130,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	}
 
 	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
-	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least <cy>{} second{}</c> to beat the <cb>{} level{}</c> available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between <cg>{} second{}</c> and <cr>{} second{}</c>{} (calculated <cy>{} second{}</c>) to beat the <cb>{} level{}</c> available.{}", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", foundXL ? "<c_>*</c>" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "", timestamps < 1 && levels == array->count() ? "" : "\n\n(This estimate is <c_>VERY</c> rough, as none of these levels have a known level duration. Try viewing the levels individually using the BetterInfo mod, if you have it.)");
+	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least <cy>{} second{}</c> to beat the <cb>{} level{}</c> available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between <cg>{} second{}</c> and <cr>{} second{}</c>{} (calculated <cy>{} second{}</c>) to beat the <cb>{} level{}</c> available.{}", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", foundXL ? "<c_>*</c>" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "", timestamps < 1 && levels == array->count() ? "\n\n(This estimate is <c_>VERY</c> rough, as none of these levels have a known level duration. Try viewing the levels individually using the BetterInfo mod, if you have it.)" : "");
 
 	FLAlertLayer* alert = FLAlertLayer::create(
 		nullptr,
@@ -138,8 +138,8 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		fmt::format(
 			"You have <co>{} attempt{}</c>, <cc>{} jump{}</c>, "
 			"<cd>{} click{}</c>, <cs>{} collected star{}</c>, "
-			"and <cj>{} collected moon{}</c> across <cb>{} available level{}</c>\n"
-			"(of which <cg>{} are completed</c>, out of <cf>{} total</c>).\n\n"
+			"and <cj>{} collected moon{}</c> across <cb>{} available level{}</c>,\n"
+			"of which <cg>{} are completed</c> and <cf>{} total on screen</c>.\n\n"
 			"Together, these <cb>*available* levels</c> use at least <ca>{} object{}</c> "
 			"and can give you <cs>{} star{}</c> and <cj>{} moon{}</c> (<cl>{} orb{}</c>) in total.\n\n"
 			"{}{}",
