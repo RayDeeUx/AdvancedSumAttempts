@@ -132,6 +132,14 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	const std::string& warning = levels != array->count() ? fmt::format("\n\n<co>This information is incomplete. Try downloading {} more level{}, then check back later!</c>", (array->count() - levels), (array->count() - levels > 1) ? "s" : "") : "";
 	const std::string& timestampsString = (timestamps == minTimestamps && timestamps == maxTimestamps && minTimestamps == maxTimestamps) ? fmt::format("It will take at least <cy>{} second{}</c> to beat the <cb>{} level{}</c> available.", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "") : fmt::format("It will take somewhere between <cg>{} second{}</c> and <cr>{} second{}</c>{} (calculated <cy>{} second{}</c>) to beat the <cb>{} level{}</c> available.{}{}", minTimestamps / 240, minTimestamps / 240 != 1 ? "s" : "", maxTimestamps / 240, maxTimestamps / 240 != 1 ? "s" : "", foundXL ? "<c_>*</c>" : "", timestamps / 240, timestamps / 240 != 1 ? "s" : "", levels, levels != 1 ? "s" : "", foundXL ? " <c_>(Perhaps even longer, with XL levels.)</c>" : "", timestamps < 1 && levels == array->count() ? "\n\n(This estimate is <c_>VERY</c> rough, as none of these levels have a known level duration. Try viewing the levels individually using the BetterInfo mod, if you have it.)" : "");
 
+	// these things can happen, apparently. why? i'll never know
+	int tempTimestamp = 0;
+	if (maxTimestamps < minTimestamps) {
+		tempTimestamp = minTimestamps;
+		minTimestamps = maxTimestamps;
+		maxTimestamps = tempTimestamp;
+	}
+
 	FLAlertLayer* alert = FLAlertLayer::create(
 		nullptr,
 		"AdvancedSumAttempts",
