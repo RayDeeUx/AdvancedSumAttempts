@@ -315,8 +315,6 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 };
 */
 
-// GlobedFeaturedListLayer
-
 #define MODIFY_GLOBED_LIST_LAYER(ClassName)\
 	struct Fields {\
 		GJListLayer* m_danksGJListLayerLevls {};\
@@ -347,5 +345,9 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 	}
 
 class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
-	MODIFY_GLOBED_LIST_LAYER(GlobedLevelListLayer)
+	MODIFY_GLOBED_LIST_LAYER(MyGlobedLevelListLayer)
+};
+
+class $nodeModify(MyGlobedFeaturedListLayer, GlobedFeaturedListLayer) {
+	MODIFY_GLOBED_LIST_LAYER(MyGlobedFeaturedListLayer)
 };
