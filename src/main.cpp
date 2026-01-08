@@ -4,11 +4,18 @@
 
 using namespace geode::prelude;
 
+namespace cue {
+	class ListCell final : public CCNode {
+		// dummy declaration because dankmeme wants to use his own UI library
+	};
+}
+
 enum class ArrayType {
 	LevelBrowser,
 	LevelList,
 	Gauntlet,
-	Globed
+	Globed,
+	GlobedThree
 };
 
 void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjso) {
@@ -23,8 +30,9 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 	}
 
 	CCObject* firstObject = array->objectAtIndex(0);
-	if (type == ArrayType::LevelList && !typeinfo_cast<LevelCell*>(firstObject)) return log::info("line 26");
-	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return log::info("line 27");
+	if ((type == ArrayType::LevelList || type == ArrayType::Globed) && !typeinfo_cast<LevelCell*>(firstObject)) return log::info("line 27");
+	if ((type == ArrayType::LevelBrowser || type == ArrayType::Gauntlet) && !typeinfo_cast<GJGameLevel*>(firstObject)) return log::info("line 28");
+	if (type == ArrayType::GlobedThree && !typeinfo_cast<cue::ListCell*>(firstObject)) return log::info("line 29");
 
 	int attempts = 0, jumps = 0, objects = 0, clicks = 0, stars = 0, moons = 0, orbs = 0, awardedStars = 0, awardedMoons = 0, minTimestamps = 0, timestamps = 0, maxTimestamps = 0, completed = 0, levels = 0;
 	bool foundXL = false;
@@ -35,6 +43,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		GJGameLevel* theLevel = nullptr;
 		int rating = 0;
 		if ((type == ArrayType::Globed || type == ArrayType::LevelList) && static_cast<LevelCell*>(obj)->m_level) {
+			if (!static_cast<LevelCell*>(obj)->m_level) continue;
 			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(obj)->m_level->m_levelID.value());
 			rating = static_cast<LevelCell*>(obj)->m_level->m_stars.value();
 		} else if (type == ArrayType::LevelBrowser) {
@@ -48,6 +57,11 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		} else if (type == ArrayType::Gauntlet) {
 			theLevel = glm->getSavedGauntletLevel(static_cast<GJGameLevel*>(obj)->m_levelID.value());
 			rating = static_cast<GJGameLevel*>(obj)->m_stars.value();
+		} else if (type == ArrayType::GlobedThree) {
+			CCNode* levelCell = static_cast<cue::ListCell*>(obj)->getChildByID("LevelCell");
+			if (!levelCell || !static_cast<LevelCell*>(levelCell)->m_level) continue;
+			theLevel = glm->getSavedLevel(static_cast<LevelCell*>(levelCell)->m_levelID.value());
+			rating = static_cast<LevelCell*>(levelCell)->m_level->m_stars.value();
 		}
 
 		if (!theLevel || static_cast<std::string>(theLevel->m_levelString).empty()) continue;
@@ -261,24 +275,50 @@ class $modify(MyGauntletLayer, GauntletLayer) {
 
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 
+/*
+class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
+	struct Fields {
+		CCNode* m_danksGJListLayerLevls {};
+	};
+	void onAttemptSum(CCObject* sender) {
+		auto fields = m_fields.self();
+		if (!fields || !fields->m_danksGJListLayerLevls || !fields->m_danksGJListLayerLevls->getChildren()) return;
+		findSumAndDisplay(fields->m_danksGJListLayerLevls->getChildren(), ArrayType::GlobedThree, nullptr);
+	}
+	void modify() {
+		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
+
+		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);
+		if (!globedPageMenu) return;
+
+		auto fields = m_fields.self();
+		if (!fields) return;
+
+		CCNode* danksGJListLayerLevls = this->querySelector("dankmeme.globed2/level-list > ScrollLayer > content-layer");
+		if (!danksGJListLayerLevls) return;
+
+		fields->m_danksGJListLayerLevls = danksGJListLayerLevls;
+
+		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
+		if (!infoBtn) return;
+
+		infoBtn->setScale(.5f);
+
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(MyGlobedLevelListLayer::onAttemptSum));
+		if (!btn) return;
+
+		globedPageMenu->addChild(btn);
+
+		btn->setPosition({75.f, 287.f});
+		btn->setID("attempts-sum-button"_spr);
+	}
+};
+*/
+
 class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 	struct Fields {
-		CCMenuItemSpriteExtra* m_prevPageBtn {};
-		CCMenuItemSpriteExtra* m_nextPageBtn {};
-		CCMenuItemSpriteExtra* m_myOwnButton {};
 		GJListLayer* m_danksGJListLayerLevls {};
 	};
-	void adjustMyButtonVisibility(float) {
-		auto fields = m_fields.self();
-		if (!fields || !fields->m_prevPageBtn || !fields->m_nextPageBtn || !fields->m_myOwnButton || !fields->m_danksGJListLayerLevls) return;
-
-		fields->m_myOwnButton->setVisible(false);
-
-		if (!fields->m_danksGJListLayerLevls->m_listView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView || !fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray) return;
-		// if (fields->m_danksGJListLayerLevls->m_listView->m_tableView->m_cellArray->count() < 1) return;
-
-		fields->m_myOwnButton->setVisible((fields->m_nextPageBtn->isVisible() || fields->m_prevPageBtn->isVisible()));
-	}
 	void onAttemptSum(CCObject* sender) {
 		auto fields = m_fields.self();
 		if (!fields || !fields->m_danksGJListLayerLevls) return;
@@ -294,13 +334,6 @@ class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 
 		auto fields = m_fields.self();
 		if (!fields) return;
-
-		CCMenuItemSpriteExtra* nextPage = globedPageMenu->getChildByType<CCMenuItemSpriteExtra>(-1);
-		CCMenuItemSpriteExtra* prevPage = globedPageMenu->getChildByType<CCMenuItemSpriteExtra>(-2);
-		if (!nextPage || !prevPage) return;
-
-		fields->m_nextPageBtn = nextPage;
-		fields->m_prevPageBtn = prevPage;
 
 		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");
 		if (!danksGJListLayerLevls) return;
@@ -319,9 +352,5 @@ class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
 
 		btn->setPosition({75.f, 287.f});
 		btn->setID("attempts-sum-button"_spr);
-
-		fields->m_myOwnButton = btn;
-
-		btn->schedule(schedule_selector(MyGlobedLevelListLayer::adjustMyButtonVisibility));
 	}
 };
