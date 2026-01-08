@@ -117,7 +117,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			nullptr,
 			"AdvancedSumAttempts",
 			fmt::format(
-				"You have <cc>{} attempt{}</c>, <cl>{} jump{}</c>, and <cd>{} click{}</c> across <cb>{} level{}</c>.\n\n"
+				"You have <co>{} attempt{}</c>, <cc>{} jump{}</c>, and <cd>{} click{}</c> across <cb>{} level{}</c>.\n\n"
 				"Together, these levels use at least <ca>{} object{}</c>.",
 				attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "", clicks, clicks != 1 ? "s" : "",
 				levels, levels != 1 ? "s" : "", objects, objects != 1 ? "s" : ""
@@ -136,11 +136,11 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 		nullptr,
 		"AdvancedSumAttempts",
 		fmt::format(
-			"You have <cc>{} attempt{}</c>, <cg>{} jump{}</c>, "
+			"You have <co>{} attempt{}</c>, <cc>{} jump{}</c>, "
 			"<cd>{} click{}</c>, <cs>{} collected star{}</c>, "
 			"and <cj>{} collected moon{}</c> "
 			"across <cb>{} available level{}</c> (of which <cg>{} are completed</c>, out of <cf>{} total</c>).\n\n"
-			"Together, these levels use at least <ca>{} object{}</c> "
+			"Together, these <cb>*available* levels</c> use at least <ca>{} object{}</c> "
 			"and can give you <cs>{} star{}</c> and <cj>{} moon{}</c> (<cl>{} orb{}</c>) in total.\n\n"
 			"{}{}",
 			attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "",
