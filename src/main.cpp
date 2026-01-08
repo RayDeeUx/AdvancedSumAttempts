@@ -317,7 +317,7 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 
 // GlobedFeaturedListLayer
 
-#define MODIFY_GLOBED_LIST_LAYER\
+#define MODIFY_GLOBED_LIST_LAYER(ClassName)\
 	struct Fields {\
 		GJListLayer* m_danksGJListLayerLevls {};\
 	};\
@@ -339,7 +339,7 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");\
 		if (!infoBtn) return;\
 		infoBtn->setScale(.5f);\
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(MyGlobedLevelListLayer::onAttemptSum));\
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(ClassName::onAttemptSum));\
 		if (!btn) return;\
 		globedPageMenu->addChild(btn);\
 		btn->setPosition({75.f, 287.f});\
@@ -347,5 +347,5 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 	}
 
 class $nodeModify(MyGlobedLevelListLayer, GlobedLevelListLayer) {
-	MODIFY_GLOBED_LIST_LAYER
+	MODIFY_GLOBED_LIST_LAYER(GlobedLevelListLayer)
 };
