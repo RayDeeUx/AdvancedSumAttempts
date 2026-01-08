@@ -141,7 +141,7 @@ void findSumAndDisplay(CCArray* array, const ArrayType type, GJSearchObject* gjs
 			"and <cj>{} collected moon{}</c> across <cb>{} available level{}</c>,\n"
 			"of which <cg>{} are completed</c> and <cf>{} total on screen</c>.\n\n"
 			"Together, these <cb>*available* levels</c> use at least <ca>{} object{}</c> "
-			"and can give you <cs>{} star{}</c> and <cj>{} moon{}</c> (<cl>{} orb{}</c>) in total.\n\n"
+			"and can give you <cs>{} star{}</c> and <cj>{} moon{}</c> (<cl>{} orb{}</c>).\n\n"
 			"{}{}",
 			attempts, attempts != 1 ? "s" : "", jumps, jumps != 1 ? "s" : "",
 			clicks, clicks != 1 ? "s" : "", awardedStars, awardedStars != 1 ? "s" : "", awardedMoons, awardedMoons != 1 ? "s" : "",
