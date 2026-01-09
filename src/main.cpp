@@ -331,7 +331,7 @@ class $nodeModify(MyGlobedThreeFeaturedListLayer, globed::FeaturedListLayer) {
 	void modify() {\
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return;\
 		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);\
-		if (!globedPageMenu) return log::info("globedpagemenu failed");\
+		if (!globedPageMenu) return;\
 		auto fields = m_fields.self();\
 		if (!fields) return;\
 		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");\
