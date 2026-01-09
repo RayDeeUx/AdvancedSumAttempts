@@ -328,17 +328,17 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 	void modify() {\
 		if (!Mod::get()->getSettingValue<bool>("enabled")) return;\
 		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);\
-		if (!globedPageMenu) return;\
+		if (!globedPageMenu) return log::info("globedpagemenu failed");\
 		auto fields = m_fields.self();\
-		if (!fields) return;\
+		if (!fields) return log::info("no fields");\
 		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");\
-		if (!danksGJListLayerLevls) return;\
+		if (!danksGJListLayerLevls) return log::info("danksgjlayerlist failed");\
 		fields->m_danksGJListLayerLevls = static_cast<GJListLayer*>(danksGJListLayerLevls);\
 		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");\
-		if (!infoBtn) return;\
+		if (!infoBtn) return log::info("infobtn failed");\
 		infoBtn->setScale(.5f);\
 		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(ClassName::onAttemptSum));\
-		if (!btn) return;\
+		if (!btn) return log::info("ccmise btn failed");\
 		globedPageMenu->addChild(btn);\
 		btn->setPosition({75.f, 287.f});\
 		btn->setID("attempts-sum-button"_spr);\
