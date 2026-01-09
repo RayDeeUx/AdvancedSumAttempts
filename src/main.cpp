@@ -310,8 +310,8 @@ class $modify(MyGauntletLayer, GauntletLayer) {
 		newMenu->setID("attempts-sum-menu"_spr);\
 	}
 
-class $nodeModify(MyGlobedThreLevelListLayer, globed::LevelListLayer) {
-	MODIFY_GLOBED_THREE_LIST_LAYER(MyGlobedLevelListLayer)
+class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
+	MODIFY_GLOBED_THREE_LIST_LAYER(MyGlobedThreeLevelListLayer)
 };
 
 class $nodeModify(MyGlobedThreeFeaturedListLayer, globed::FeaturedListLayer) {
