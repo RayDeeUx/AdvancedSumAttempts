@@ -8,7 +8,7 @@
 	},
 	"id": "raydeeux.advancedsumattempts",
 	"name": "AdvancedSumAttempts",
-	"version": "v0.0.0-alpha.1",
+	"version": "v1.0.0",
 	"developer": "RayDeeUx",
 	"description": "Show total attempts counts for levels shown on screen, including gauntlets and level lists.",
 	"repository": "https://github.com/RayDeeUx/AdvancedSumAttempts",
