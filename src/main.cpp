@@ -275,45 +275,48 @@ class $modify(MyGauntletLayer, GauntletLayer) {
 
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 
-/*
-class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
-	struct Fields {
-		CCNode* m_danksGJListLayerLevls {};
-	};
-	void onAttemptSum(CCObject* sender) {
-		auto fields = m_fields.self();
-		if (!fields || !fields->m_danksGJListLayerLevls || !fields->m_danksGJListLayerLevls->getChildren()) return;
-		findSumAndDisplay(fields->m_danksGJListLayerLevls->getChildren(), ArrayType::GlobedThree, nullptr);
+#define MODIFY_GLOBED_THREE_LIST_LAYER(ClassName)\
+	struct Fields {\
+		CCNode* m_danksGJListLayerLevls {};\
+	};\
+	void onAttemptSum(CCObject* sender) {\
+		auto fields = m_fields.self();\
+		if (!fields || !fields->m_danksGJListLayerLevls || !fields->m_danksGJListLayerLevls->getChildren()) return;\
+		findSumAndDisplay(fields->m_danksGJListLayerLevls->getChildren(), ArrayType::GlobedThree, nullptr);\
+	}\
+	void modify() {\
+		if (!Mod::get()->getSettingValue<bool>("enabled")) return;\
+		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);\
+		if (!globedPageMenu) return;\
+		auto fields = m_fields.self();\
+		if (!fields) return;\
+		CCNode* danksGJListLayerLevls = this->querySelector("dankmeme.globed2/level-list > ScrollLayer > content-layer");\
+		if (!danksGJListLayerLevls) return;\
+		fields->m_danksGJListLayerLevls = danksGJListLayerLevls;\
+		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");\
+		if (!infoBtn) return;\
+		infoBtn->setScale(.5f);\
+		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(ClassName::onAttemptSum));\
+		if (!btn) return;\
+		CCMenu* newMenu = CCMenu::create();\
+		newMenu->setContentSize(globedPageMenu->getContentSize());\
+		newMenu->ignoreAnchorPointForPosition(true);\
+		newMenu->setZOrder(globedPageMenu->getZOrder() + 2);\
+		newMenu->setPosition({0.f, 0.f});\
+		newMenu->addChild(btn);\
+		this->addChild(newMenu);\
+		btn->setPosition({75.f, 287.f});\
+		btn->setID("attempts-sum-button"_spr);\
+		newMenu->setID("attempts-sum-menu"_spr);\
 	}
-	void modify() {
-		if (!Mod::get()->getSettingValue<bool>("enabled")) return;
 
-		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);
-		if (!globedPageMenu) return;
-
-		auto fields = m_fields.self();
-		if (!fields) return;
-
-		CCNode* danksGJListLayerLevls = this->querySelector("dankmeme.globed2/level-list > ScrollLayer > content-layer");
-		if (!danksGJListLayerLevls) return;
-
-		fields->m_danksGJListLayerLevls = danksGJListLayerLevls;
-
-		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");
-		if (!infoBtn) return;
-
-		infoBtn->setScale(.5f);
-
-		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(MyGlobedLevelListLayer::onAttemptSum));
-		if (!btn) return;
-
-		globedPageMenu->addChild(btn);
-
-		btn->setPosition({75.f, 287.f});
-		btn->setID("attempts-sum-button"_spr);
-	}
+class $nodeModify(MyGlobedThreLevelListLayer, globed::LevelListLayer) {
+	MODIFY_GLOBED_THREE_LIST_LAYER(MyGlobedLevelListLayer)
 };
-*/
+
+class $nodeModify(MyGlobedThreeFeaturedListLayer, globed::FeaturedListLayer) {
+	MODIFY_GLOBED_THREE_LIST_LAYER(MyGlobedThreeFeaturedListLayer)
+};
 
 #define MODIFY_GLOBED_LIST_LAYER(ClassName)\
 	struct Fields {\
@@ -330,16 +333,23 @@ class $nodeModify(MyGlobedThreeLevelListLayer, globed::LevelListLayer) {
 		CCMenu* globedPageMenu = this->getChildByType<CCMenu>(-1);\
 		if (!globedPageMenu) return log::info("globedpagemenu failed");\
 		auto fields = m_fields.self();\
-		if (!fields) return log::info("no fields");\
+		if (!fields) return;\
 		CCNode* danksGJListLayerLevls = this->getChildByID("dankmeme.globed2/level-list");\
-		if (!danksGJListLayerLevls) return log::info("danksgjlayerlist failed");\
+		if (!danksGJListLayerLevls) return;\
 		fields->m_danksGJListLayerLevls = static_cast<GJListLayer*>(danksGJListLayerLevls);\
 		CCSprite* infoBtn = CCSprite::createWithSpriteFrameName("GJ_infoBtn_001.png");\
-		if (!infoBtn) return log::info("infobtn failed");\
+		if (!infoBtn) return;\
 		infoBtn->setScale(.5f);\
 		CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(infoBtn, this, menu_selector(ClassName::onAttemptSum));\
-		if (!btn) return log::info("ccmise btn failed");\
-		globedPageMenu->addChild(btn);\
+		if (!btn) return;\
+		CCMenu* newMenu = CCMenu::create();\
+		newMenu->setID("attempts-sum-menu"_spr);\
+		newMenu->setContentSize(globedPageMenu->getContentSize());\
+		newMenu->ignoreAnchorPointForPosition(true);\
+		this->addChild(newMenu);\
+		newMenu->setPosition({0.f, 0.f});\
+		newMenu->setZOrder(globedPageMenu->getZOrder() + 2);\
+		newMenu->addChild(btn);\
 		btn->setPosition({75.f, 287.f});\
 		btn->setID("attempts-sum-button"_spr);\
 	}
